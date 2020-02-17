@@ -18,7 +18,7 @@
     "prepare": "npm run build",
     "serve:test": "cross-env NODE_ENV=test node integration/fixtures/server.js",
     "serve:test:ssl": "cross-env-shell NODE_ENV=test USE_SSL=true npm run rollup:test && cross-env USE_SSL=true node integration/fixtures/server.js",
-    "test": "is-ci \"test:coverage\" \"test:watch\"",
+    "test": "is-ci \"test:coverage\" \"test:coverage\"",
     "test:coverage": "jest",
     "test:watch": "jest --watch",
     "test:dev": "jest --no-coverage",
