@@ -1,0 +1,150 @@
+{
+  "name": "@streamsql/streamsql-js",
+  "author": "StreamSQL <ethan@streamsql.io>",
+  "version": "0.0.0",
+  "license": "MIT",
+  "description": "StreamSQL's javascript ingestion API",
+  "main": "streamsql.cjs.js",
+  "module": "streamsql.esm.js",
+  "unpkg": "streamsql.min.js",
+  "types": "streamsql.d.ts",
+  "private": true,
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "rollup": "rollup -c",
+    "rollup:test": "rollup --config rollup-test.config.js",
+    "copy": "copyfiles -f package.json readme.md LICENSE streamsql.d.ts dist && json -I -f dist/package.json -e \"this.private=false; this.devDependencies=undefined; this.optionalDependencies=undefined; this.scripts=undefined; this.prettier=undefined; this.jest=undefined; this.babel=undefined; this.np=undefined; this.publishConfig=undefined;\"",
+    "build": "npm-run-all --parallel rollup copy",
+    "prepare": "npm run build",
+    "serve:test": "cross-env NODE_ENV=test node integration/fixtures/server.js",
+    "serve:test:ssl": "cross-env-shell NODE_ENV=test USE_SSL=true npm run rollup:test && cross-env USE_SSL=true node integration/fixtures/server.js",
+    "test": "is-ci \"test:coverage\" \"test:watch\"",
+    "test:coverage": "jest",
+    "test:watch": "jest --watch",
+    "test:dev": "jest --no-coverage",
+    "test:ts": "tsc --noEmit",
+    "test:integration": "cross-env JEST_PUPPETEER_CONFIG=integration/jest-puppeteer.config.js USE_SSL=true jest --config integration/jest-integration.config.js",
+    "prettier": "prettier --ignore-path .prettierignore \"**/*.+(js|ts)\"",
+    "format": "npm run prettier -- --write",
+    "check-format": "npm run prettier --list-different"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-typescript": "^7.8.3",
+    "@rollup/plugin-replace": "^2.3.1",
+    "@types/jest": "^25.1.2",
+    "babel-jest": "^25.1.0",
+    "copyfiles": "^2.2.0",
+    "cross-env": "^7.0.0",
+    "express": "^4.17.1",
+    "is-ci-cli": "^2.0.0",
+    "jest": "^25.1.0",
+    "jest-puppeteer": "^4.4.0",
+    "json": "^9.0.6",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.19.1",
+    "puppeteer": "^2.1.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^1.31.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-size-snapshot": "^0.11.0",
+    "rollup-plugin-terser": "^5.2.0",
+    "rollup-plugin-uglify": "^6.0.4",
+    "typescript": "^3.7.5",
+    "xhr-mock": "^2.5.1"
+  },
+  "homepage": "https://streamsql.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/streamsqlio/streamsql-js.git"
+  },
+  "keywords": [
+    "streamsql",
+    "streamsql-js",
+    "streamsql-javascript",
+    "ingestion",
+    "pixel",
+    "upload",
+    "analytics",
+    "machine learning"
+  ],
+  "np": {
+    "contents": "dist"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "loose": true,
+          "modules": false,
+          "targets": ">1%, not dead, not ie 11, not op_mini all"
+        }
+      ],
+      "@babel/preset-typescript"
+    ],
+    "plugins": [
+      [
+        "@babel/plugin-proposal-object-rest-spread",
+        {
+          "loose": true
+        }
+      ],
+      [
+        "@babel/plugin-proposal-class-properties",
+        {
+          "loose": true
+        }
+      ]
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          "@babel/transform-modules-commonjs"
+        ]
+      }
+    }
+  },
+  "prettier": {
+    "semi": false,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "tabWidth": 2,
+    "useTabs": false,
+    "printWidth": 80
+  },
+  "jest": {
+    "testRegex": "test.(ts)$",
+    "displayName": "unit",
+    "testEnvironmentOptions": {
+      "referrer": "https://www.google.com"
+    },
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "html",
+      "text",
+      "text-summary"
+    ],
+    "collectCoverageFrom": [
+      "src/*.{ts,js}",
+      "!test/",
+      "!**/*.d.ts",
+      "!**/*.umd.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/integration/"
+    ]
+  }
+}

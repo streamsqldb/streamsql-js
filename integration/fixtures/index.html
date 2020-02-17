@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="./streamsql.min.js"></script>
+  <title>StreamSQL JS Test Page</title>
+</head>
+<body>
+  <h1>Test Page</h1>
+  <button id="count-button">Count</button>
+
+  <input id="user-input" type="text" id="userid" value="" />
+  <button id="login-button">LOGIN</button>
+
+  <a href="/alt.html">Go to alt page</a>
+
+  <button id="callback-button">CALLBACK</button>
+
+  <script type="application/javascript">
+    streamsql.init('0000-0000-0000-0000'); // create client with apiKey
+
+    // test setting a user id and persisting to next page
+    document.getElementById('login-button').addEventListener('click', () => {
+      streamsql.identify(
+        document.getElementById('user-input').value
+      ); // tie a user id to events
+      streamsql.sendEvent('mystream'); // send an event to check user id
+    });
+
+    // test onSent callback
+    document.getElementById('callback-button').addEventListener('click', () => {
+      streamsql.sendEvent('mystream', {}, function (status, respTxt) {
+        console.log(status)
+      }); 
+    });
+    
+    // check general data being sent and multiple sends ok
+    var count = 0;
+    document.getElementById('count-button').addEventListener('click', () => {
+      count += 1;
+      streamsql.sendEvent(
+        'clickstream',
+        {event: 'clicked', count: count}
+      );
+    });
+  </script>
+</body>
+</html>

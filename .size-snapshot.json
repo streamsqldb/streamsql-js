@@ -1,0 +1,26 @@
+{
+  "dist/streamsql.esm.js": {
+    "bundled": 7741,
+    "minified": 3828,
+    "gzipped": 1575,
+    "treeshaked": {
+      "rollup": {
+        "code": 75,
+        "import_statements": 0
+      },
+      "webpack": {
+        "code": 4442
+      }
+    }
+  },
+  "dist/streamsql.cjs.js": {
+    "bundled": 9122,
+    "minified": 4326,
+    "gzipped": 1641
+  },
+  "dist/streamsql.min.js": {
+    "bundled": 10015,
+    "minified": 4153,
+    "gzipped": 1615
+  }
+}

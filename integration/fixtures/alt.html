@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="./streamsql.min.js"></script>
+  <title>StreamSQL JS Alt Test Page</title>
+</head>
+<body>
+  <h1>Alt Page</h1>
+  <button id="send-button">Send event</button>
+  <button id="logout-button">Logout</button>
+
+
+  <script type="application/javascript">
+    streamsql.init('0000-0000-0000-0000'); // create client with apiKey
+
+    // use to check that cookie set on previous page is working
+    document.getElementById('send-button').addEventListener('click', function () {
+      streamsql.sendEvent('userstream')
+    })
+
+    document.getElementById('logout-button').addEventListener('click', function () {
+      streamsql.unidentify() // clear the userid
+      streamsql.sendEvent('userstream') // should send without user id
+    })
+  </script>
+</body>
+</html>
