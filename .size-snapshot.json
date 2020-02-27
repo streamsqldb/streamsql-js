@@ -1,26 +1,26 @@
 {
   "dist/streamsql.esm.js": {
-    "bundled": 8133,
-    "minified": 3944,
-    "gzipped": 1606,
+    "bundled": 8092,
+    "minified": 3922,
+    "gzipped": 1610,
     "treeshaked": {
       "rollup": {
         "code": 75,
         "import_statements": 0
       },
       "webpack": {
-        "code": 4558
+        "code": 4536
       }
     }
   },
   "dist/streamsql.cjs.js": {
-    "bundled": 9592,
-    "minified": 4470,
-    "gzipped": 1679
+    "bundled": 9528,
+    "minified": 4442,
+    "gzipped": 1682
   },
   "dist/streamsql.min.js": {
-    "bundled": 10483,
-    "minified": 4297,
-    "gzipped": 1655
+    "bundled": 10419,
+    "minified": 4269,
+    "gzipped": 1653
   }
 }
