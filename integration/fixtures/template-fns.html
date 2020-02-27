@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script type="text/javascript" src="./streamsql.min.js"></script>
+  <title>Test Template Functions</title>
+</head>
+<body>
+  <h1>Alt Page</h1>
+  <input id="input-user-id" type="text" />
+  <button id="login-button">Login</button>
+  <button id="logout-button">Logout</button>
+  <div id="identify-response">
+  <!-- Plug/unplug user id here -->
+  </div>
+
+
+  <script type="application/javascript">
+    streamsql.init('0000-0000-0000-0000'); // create client with apiKey
+    // These should be called on (un)identify.
+    // Test by checking the text of user-id response
+    streamsql.onIdentify = function(userId) {
+      document.getElementById('identify-response').innerText = userId;
+    }
+    streamsql.onUnidentify = function() {
+      document.getElementById('identify-response').innerText = '';
+    }
+    document.getElementById('login-button').addEventListener('click', function () {
+      var userId = document.getElementById('input-user-id').value;
+      streamsql.identify(userId);
+    })
+    document.getElementById('logout-button').addEventListener('click', function () {
+      streamsql.unidentify() // clear the userid
+    })
+  </script>
+</body>
+</html>

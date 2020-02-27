@@ -1,5 +1,6 @@
 const home = SERVER_URL + '/index.html'
 const alt = SERVER_URL + '/alt.html'
+const templatePage = SERVER_URL + '/template-fns.html'
 
 describe('integration', () => {
   let page
@@ -29,8 +30,8 @@ describe('integration', () => {
     if (postData) {
       postData = JSON.parse(postData)
     }
-    expect(postData.streamName).toMatch('clickstream')
-    expect(postData.eventTimestamp).toBeGreaterThan(15e9)
+    expect(postData.stream).toMatch('clickstream')
+    expect(postData.data.timestamp).toBeGreaterThan(15e9)
   }, 10000)
 
   it('sends page context with url, title, and referrer', async () => {
@@ -41,7 +42,7 @@ describe('integration', () => {
     await page.goto(home)
     await page.click('button#count-button')
     postData = postData && JSON.parse(postData)
-    expect(postData.context).toMatchObject({
+    expect(postData.data.context).toMatchObject({
       url: await page.url(),
       title: await page.title(),
       referrer: '',
@@ -50,7 +51,7 @@ describe('integration', () => {
     await Promise.all([page.waitForNavigation(), page.click('a')])
     await page.click('button#send-button')
     postData = postData && JSON.parse(postData)
-    expect(postData.context).toMatchObject({
+    expect(postData.data.context).toMatchObject({
       url: await page.url(),
       title: await page.title(),
       referrer: expect.stringMatching(SERVER_URL),
@@ -107,27 +108,27 @@ describe('integration', () => {
     await page.type('input#user-input', userId)
     await page.click('button#login-button')
     postData = postData && JSON.parse(postData)
-    expect(postData.user).toMatchObject({ id: userId })
+    expect(postData.data.user).toMatchObject({ id: userId })
     postData = undefined // reset for next page
 
     // visit the other page, should persist userId
     await Promise.all([page.waitForNavigation(), page.click('a')])
     await page.click('button#send-button')
     postData = postData && JSON.parse(postData)
-    expect(postData.user).toMatchObject({ id: userId })
+    expect(postData.data.user).toMatchObject({ id: userId })
     postData = undefined
 
     // do logout, ensure logout sent event does NOT have user id
     await page.click('#logout-button')
     postData = postData && JSON.parse(postData)
-    expect(postData.user).toMatchObject({ id: '' })
+    expect(postData.data.user).toMatchObject({ id: '' })
     postData = undefined
 
     // go back and send event from home page, should NOT have user id
     await page.goBack()
     await page.click('#count-button')
     postData = postData && JSON.parse(postData)
-    expect(postData.user).toMatchObject({ id: '' })
+    expect(postData.data.user).toMatchObject({ id: '' })
   }, 20000)
 
   it('persists user id when coming back to site', async () => {
@@ -144,7 +145,7 @@ describe('integration', () => {
     await page.type('input#user-input', userId)
     await page.click('button#login-button')
     postData = postData && JSON.parse(postData)
-    expect(postData.user).toMatchObject({ id: userId })
+    expect(postData.data.user).toMatchObject({ id: userId })
     postData = undefined // reset for next page
 
     // visit the other page, should persist userId
@@ -153,6 +154,21 @@ describe('integration', () => {
     await page.goto(alt)
     await page.click('button#send-button')
     postData = postData && JSON.parse(postData)
-    expect(postData.user).toMatchObject({ id: userId })
+    expect(postData.data.user).toMatchObject({ id: userId })
   }, 8000)
+
+  it('calls template functions onIdentify and onUnidentify', async () => {
+    const userId = 'user-id'
+    const responseDivSelector = 'div#identify-response'
+    // simulate a login that should store id to send w request
+    await page.goto(templatePage)
+    await page.type('#input-user-id', userId)
+    await page.click('button#login-button')
+    const identifyResponse = await page.$(responseDivSelector)
+    expect(await identifyResponse.evaluate(node => node.innerText)).toBe(userId);
+
+    await page.click('button#logout-button')
+    const unidentifyResponse = await page.$(responseDivSelector)
+    expect(await unidentifyResponse.evaluate(node => node.innerText)).toBe('');
+  })
 })

@@ -132,4 +132,20 @@ describe('StreamSQL Core', () => {
     })
     expect(() => streamsql.sendEvent('mystream')).not.toThrow()
   })
+
+  it('calls template listeners for identify, unidentify', () => {
+    streamsql.init(apiKey)
+    const onIdentify = jest.fn((userId: string) => userId)
+    const onUnidentify = jest.fn()
+
+    streamsql.onIdentify = onIdentify
+    streamsql.onUnidentify = onUnidentify
+
+    streamsql.identify('user-id')
+    expect(onIdentify).toHaveBeenCalledTimes(1)
+    expect(onIdentify).toHaveBeenCalledWith('user-id')
+
+    streamsql.unidentify()
+    expect(onUnidentify).toHaveBeenCalledTimes(1)
+  })
 })

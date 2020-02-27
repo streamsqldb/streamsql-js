@@ -36,12 +36,14 @@ export default class StreamSQLClient implements CoreAPI {
   public identify(userId: string): StreamSQLClient {
     if (!this.identifier) this.throwNoInitError()
     this.identifier.setUser(userId)
+    this.onIdentify(userId) // call template listener
     return this
   }
 
   public unidentify(): StreamSQLClient {
     if (!this.identifier) this.throwNoInitError()
     this.identifier.deleteUser()
+    this.onUnidentify() // call template listener
     return this
   }
 
@@ -57,9 +59,8 @@ export default class StreamSQLClient implements CoreAPI {
     if (!this.pageCtx || !this.identifier) {
       this.throwNoInitError()
     }
-    return {
-      streamName: streamName.toLowerCase(),
-      eventTimestamp: new Date().getTime(),
+    const streamsqlData = {
+      timestamp: new Date().getTime(),
       context: {
         url: this.pageCtx.location(),
         referrer: this.pageCtx.referrer(),
@@ -69,11 +70,20 @@ export default class StreamSQLClient implements CoreAPI {
         id: this.identifier.getUser(),
         // FUTURE: ability to add other user props
       },
-      data: data || {}
+    }
+    const _data = data ? Object.assign({}, streamsqlData, data) : streamsqlData
+    return {
+      stream: streamName.toLowerCase(),
+      data: _data
     }
   }
 
   private throwNoInitError(): never {
     throw streamsqlErr(`api key must be set first: streamsql.init(apiKey)`)
   }
+
+  // Template functions. Originally built to allow pixel to listen for events.
+  // @ts-ignore
+  public onIdentify(userId: string) {}
+  public onUnidentify() {}
 }
