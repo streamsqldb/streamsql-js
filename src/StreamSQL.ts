@@ -36,12 +36,14 @@ export default class StreamSQLClient implements CoreAPI {
   public identify(userId: string): StreamSQLClient {
     if (!this.identifier) this.throwNoInitError()
     this.identifier.setUser(userId)
+    this.onIdentify(userId) // call template listener
     return this
   }
 
   public unidentify(): StreamSQLClient {
     if (!this.identifier) this.throwNoInitError()
     this.identifier.deleteUser()
+    this.onUnidentify() // call template listener
     return this
   }
 
@@ -76,4 +78,9 @@ export default class StreamSQLClient implements CoreAPI {
   private throwNoInitError(): never {
     throw streamsqlErr(`api key must be set first: streamsql.init(apiKey)`)
   }
+
+  // Template functions. Originally built to allow pixel to listen for events.
+  // @ts-ignore
+  public onIdentify(userId: string) {}
+  public onUnidentify() {}
 }

@@ -1,5 +1,6 @@
 const home = SERVER_URL + '/index.html'
 const alt = SERVER_URL + '/alt.html'
+const templatePage = SERVER_URL + '/template-fns.html'
 
 describe('integration', () => {
   let page
@@ -155,4 +156,19 @@ describe('integration', () => {
     postData = postData && JSON.parse(postData)
     expect(postData.user).toMatchObject({ id: userId })
   }, 8000)
+
+  it('calls template functions onIdentify and onUnidentify', async () => {
+    const userId = 'user-id'
+    const responseDivSelector = 'div#identify-response'
+    // simulate a login that should store id to send w request
+    await page.goto(templatePage)
+    await page.type('#input-user-id', userId)
+    await page.click('button#login-button')
+    const identifyResponse = await page.$(responseDivSelector)
+    expect(await identifyResponse.evaluate(node => node.innerText)).toBe(userId);
+
+    await page.click('button#logout-button')
+    const unidentifyResponse = await page.$(responseDivSelector)
+    expect(await unidentifyResponse.evaluate(node => node.innerText)).toBe('');
+  })
 })
