@@ -22,4 +22,16 @@ describe('Page Context', () => {
     expect(pageCtx.title()).toBe('Home Page')
     window.document.title = ''
   })
+
+  it('returns the user agent', () => {
+    const ua = "Mozilla/5.0" // beginning of jsDom default
+    pageCtx = new PageContext()
+    expect(pageCtx.userAgent()).toMatch(ua)
+  })
+
+  it('returns the user agent', () => {
+    const lang = 'en-US' // jsDom default
+    pageCtx = new PageContext()
+    expect(pageCtx.language()).toMatch(lang)
+  })
 })

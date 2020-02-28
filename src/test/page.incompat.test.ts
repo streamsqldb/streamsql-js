@@ -15,4 +15,9 @@ describe('Page Context - No Browser', () => {
     expect(new PageContext().referrer()).toBe('')
     expect(new PageContext().title()).toBe('')
   })
+
+  it('returns empty strings if navigator is not available', () => {
+    expect(new PageContext().language()).toBe('')
+    expect(new PageContext().userAgent()).toBe('')
+  })
 })
