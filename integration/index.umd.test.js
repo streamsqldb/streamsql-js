@@ -20,7 +20,7 @@ describe('integration', () => {
     expect(isResponseOK).toBe(true)
   })
 
-  it('sends streamname and timestamp', async () => {
+  it('sends streamname, timestamp, and apiVersion', async () => {
     let postData
     await page.goto(home)
     page.on('request', req => {
@@ -32,13 +32,16 @@ describe('integration', () => {
     }
     expect(postData.stream).toMatch('clickstream')
     expect(postData.data.timestamp).toBeGreaterThan(15e9)
+    expect(postData.data.apiVersion).toMatch(/v[0-9]+/)
   }, 10000)
 
-  it('sends page context with url, title, and referrer', async () => {
+  it('sends page context with url, title, ref, lang, ua', async () => {
     let postData
     page.on('request', req => {
       if (req.method() === 'POST') postData = req.postData()
     })
+    const ua = "Iceweasel/001"
+    await page.setUserAgent(ua)
     await page.goto(home)
     await page.click('button#count-button')
     postData = postData && JSON.parse(postData)
@@ -46,6 +49,8 @@ describe('integration', () => {
       url: await page.url(),
       title: await page.title(),
       referrer: '',
+      userAgent: ua,
+      language: expect.stringMatching('en'),
     })
     // visit the other page
     await Promise.all([page.waitForNavigation(), page.click('a')])
@@ -55,6 +60,8 @@ describe('integration', () => {
       url: await page.url(),
       title: await page.title(),
       referrer: expect.stringMatching(SERVER_URL),
+      userAgent: ua,
+      language: expect.stringMatching('en'),
     })
   }, 15000)
 
@@ -80,7 +87,7 @@ describe('integration', () => {
     for (let i = 1; i <= 5; i += 1) {
       await page.click('button#count-button')
       postData = postData && JSON.parse(postData)
-      expect(postData.data.count).toEqual(i)
+      expect(postData.data.event.count).toEqual(i)
     }
   }, 12000)
 

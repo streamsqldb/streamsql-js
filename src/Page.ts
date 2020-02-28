@@ -1,7 +1,9 @@
 export interface PageContextProvider {
-  location(): string
   referrer(): string
   title(): string
+  language(): string
+  userAgent(): string
+  location(): string // url
 }
 
 export default class PageContext implements PageContextProvider {
@@ -26,6 +28,20 @@ export default class PageContext implements PageContextProvider {
     return ''
   }
 
+  public language(): string {
+    if (this.isNavigator()) {
+      return navigator.language || ''
+    }
+    return ''
+  }
+
+  public userAgent(): string {
+    if (this.isNavigator()) {
+      return navigator.userAgent || ''
+    }
+    return ''
+  }
+
   protected isWindow(prop: string): boolean {
     return (
       typeof window !== 'undefined'
@@ -35,5 +51,9 @@ export default class PageContext implements PageContextProvider {
 
   protected isDocument(): boolean {
     return this.isWindow('document') && typeof document !== 'undefined'
+  }
+
+  protected isNavigator(): boolean {
+    return this.isWindow('navigator') && typeof navigator !== 'undefined'
   }
 }

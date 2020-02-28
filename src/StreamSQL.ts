@@ -2,7 +2,7 @@ import XHR, { Fetcher, RequestCallback } from './XHR'
 import UserIdentifier, { Identifier } from './Identify'
 import PageContext, { PageContextProvider } from './Page'
 import { streamsqlErr, isValidAPIKeyFormat } from './utils'
-import { apiEndpoint } from './config'
+import { apiEndpoint, apiVersion } from './config'
 
 export interface CoreAPI {
   init(apiKey: string): CoreAPI
@@ -61,17 +61,22 @@ export default class StreamSQLClient implements CoreAPI {
     }
     const streamsqlData = {
       timestamp: new Date().getTime(),
+      apiVersion: this.version(),
       context: {
-        url: this.pageCtx.location(),
+        language: this.pageCtx.language(),
         referrer: this.pageCtx.referrer(),
         title: this.pageCtx.title(),
+        userAgent: this.pageCtx.userAgent(),
+        url: this.pageCtx.location(),
       },
       user: {
         id: this.identifier.getUser(),
         // FUTURE: ability to add other user props
       },
     }
-    const _data = data ? Object.assign({}, streamsqlData, data) : streamsqlData
+    const _data = data
+      ? Object.assign({}, streamsqlData, { event: data })
+      : streamsqlData
     return {
       stream: streamName.toLowerCase(),
       data: _data
@@ -80,6 +85,11 @@ export default class StreamSQLClient implements CoreAPI {
 
   private throwNoInitError(): never {
     throw streamsqlErr(`api key must be set first: streamsql.init(apiKey)`)
+  }
+
+  // For pixel
+  private version(): string {
+    return apiVersion
   }
 
   // Template functions. Originally built to allow pixel to listen for events.
