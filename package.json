@@ -2,9 +2,6 @@
   "name": "@streamsql/streamsql-js",
   "author": "StreamSQL <ethan@streamsql.io>",
   "version": "1.0.0-beta.0",
-  "config": {
-    "apiVersion": "v1-beta"
-  },
   "license": "MIT",
   "description": "StreamSQL's javascript ingestion API",
   "main": "streamsql.cjs.js",
@@ -16,7 +13,7 @@
     "prebuild": "rimraf dist",
     "rollup": "rollup -c",
     "rollup:test": "rollup --config rollup-test.config.js",
-    "copy": "copyfiles -f package.json readme.md LICENSE streamsql.d.ts dist && json -I -f dist/package.json -e \"this.private=false; this.devDependencies=undefined; this.optionalDependencies=undefined; this.scripts=undefined; this.prettier=undefined; this.jest=undefined; this.babel=undefined; this.config=undefined; this.np=undefined; this.publishConfig=undefined;\"",
+    "copy": "copyfiles -f package.json readme.md LICENSE streamsql.d.ts dist && json -I -f dist/package.json -e \"this.private=false; this.devDependencies=undefined; this.optionalDependencies=undefined; this.scripts=undefined; this.prettier=undefined; this.jest=undefined; this.babel=undefined; this.np=undefined; this.publishConfig=undefined;\"",
     "build": "npm-run-all --parallel rollup copy",
     "prepare": "npm run build",
     "serve:test": "cross-env NODE_ENV=test node integration/fixtures/server.js",
@@ -31,7 +28,9 @@
     "format": "npm run prettier -- --write",
     "check-format": "npm run prettier --list-different"
   },
-  
+  "config": {
+    "apiVersion": "v1-beta"
+  },
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
