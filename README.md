@@ -31,7 +31,7 @@ streamsql.identify('USER_ID')
 
 // Send data on your streams
 streamsql.sendEvent(
-  'my-event-stream',
+  'mystream',
   { eventName: 'My Event' },
 )
 ```
