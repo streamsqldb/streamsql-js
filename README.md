@@ -52,7 +52,7 @@ Set a user id to be tied with events. The user id is persisted throughout multip
 
 Clears any stored user ids that were set by `streamsql.identify('userId')`.
 
-#### `streamsql.sendEvent(streamName <string> [,data <object>, onSent? <function>])`
+#### `streamsql.sendEvent(streamName <string> [,data <object>, onSent <function>])`
 
 Send data to `streamName`. The stream name must be valid and registered prior to sending. If data is not provided, default options will be sent including page context, any set user ids, timestamps, and so on. `onSent` is a an optional callback that is called with the response status code and response text when sending is complete.
 
