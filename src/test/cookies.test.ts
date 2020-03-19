@@ -76,6 +76,14 @@ describe('CookieHandler', () => {
     expect(document.cookie).toMatch('Secure')
   })
 
+  it('sets default cookie path to /', () => {
+    ch.setCookie({
+      name: 'name',
+      value: 'value',
+    })
+    expect(document.cookie).toMatch('Path=/')
+  })
+
   it('overrides default domain and path when set in options', () => {
     ch.setCookie({
       name: 'name',
