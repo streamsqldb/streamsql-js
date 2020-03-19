@@ -20,7 +20,7 @@ describe('integration', () => {
     expect(isResponseOK).toBe(true)
   })
 
-  it('sends streamname, timestamp, and apiVersion', async () => {
+  it('sends streamname, timestamp (sentAt), and apiVersion', async () => {
     let postData
     await page.goto(home)
     page.on('request', req => {
@@ -31,7 +31,7 @@ describe('integration', () => {
       postData = JSON.parse(postData)
     }
     expect(postData.stream).toMatch('clickstream')
-    expect(postData.data.timestamp).toBeGreaterThan(15e9)
+    expect(postData.data.sentAt).toBeGreaterThan(15e9)
     expect(postData.data.apiVersion).toMatch(/v[0-9]+/)
   }, 10000)
 

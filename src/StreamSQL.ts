@@ -60,7 +60,7 @@ export default class StreamSQLClient implements CoreAPI {
       this.throwNoInitError()
     }
     const streamsqlData = {
-      timestamp: new Date().getTime(),
+      sentAt: new Date().getTime(),
       apiVersion: this.version(),
       context: {
         language: this.pageCtx.language(),
