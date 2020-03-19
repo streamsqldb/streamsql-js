@@ -47,6 +47,7 @@ export default class CookieJar implements CookieHandler {
       oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
       cookieOpts.expires = oneYearFromNow.toUTCString()
     }
+    cookieOpts.path = cookieOpts.path || '/'
     cookieOpts.secure = true
     cookieOpts.sameSite = SameSite.None
     this.simpleCookies.set(cookieOpts.name, cookieOpts.value)
@@ -85,6 +86,7 @@ export default class CookieJar implements CookieHandler {
     this.setCookie({
       name,
       value: '',
+      path: '/',
       maxAge: 0,
       expires: epoch.toUTCString()
     })
