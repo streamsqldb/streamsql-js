@@ -29,7 +29,7 @@
     "check-format": "npm run prettier --list-different"
   },
   "config": {
-    "apiVersion": "v1-beta"
+    "apiVersion": "v1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",

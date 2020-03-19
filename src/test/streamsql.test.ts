@@ -37,7 +37,7 @@ describe('StreamSQL Core', () => {
     expect(streamsql.init(apiKey)).toBeInstanceOf(StreamSQL)
   })
 
-  it('sends normalized stream, numeric timestamp, and apiVersion', () => {
+  it('sends normalized stream, numeric timestamp (sentAt), and apiVersion', () => {
     const streamName = 'MyStream'
     streamsql.init(apiKey)
     // @ts-ignore
@@ -46,7 +46,7 @@ describe('StreamSQL Core', () => {
     expect(dataBuilder).toHaveReturnedWith(expect.objectContaining({
       stream: expect.stringMatching(streamName.toLowerCase()),
       data: expect.objectContaining({
-        timestamp: expect.any(Number),
+        sentAt: expect.any(Number),
         apiVersion: expect.stringMatching(process.env.npm_package_config_apiVersion!)
       })
     }))
